@@ -6,8 +6,7 @@ authors = ["atsushi.fujioka"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.9.7 || >3.9.7,<4.0"
-streamlit = "^1.40.1"
+python = "3.10.13"
 langchain = "^0.3.7"
 python-dotenv = "^1.0.1"
 langchain-openai = "^0.2.9"
