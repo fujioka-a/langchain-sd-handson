@@ -15,6 +15,7 @@ sse-starlette = "^2.2.1"
 uvicorn = "^0.34.0"
 langchain-core = "^0.3.28"
 langgraph = "^0.2.60"
+httpx = "0.25.2"
 
 [build-system]
 requires = ["poetry-core"]

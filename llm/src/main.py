@@ -28,6 +28,7 @@ add_routes(
 
 @tool
 def weather(query: str):
+    """"今日の天気を返す"""
     # return f"Today's weather is sunny in {query}."
     return "晴れのち雨です"
 
