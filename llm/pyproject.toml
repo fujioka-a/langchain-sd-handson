@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "bedrock-workshop"
+name = "llm"
 version = "0.1.0"
 description = ""
 authors = ["atsushi.fujioka"]
@@ -11,6 +11,8 @@ langchain = "^0.3.7"
 python-dotenv = "^1.0.1"
 langchain-openai = "^0.2.9"
 langchain-community = "^0.3.8"
+fastapi = "^0.115.6"
+langserve = "^0.3.0"
 
 [build-system]
 requires = ["poetry-core"]
