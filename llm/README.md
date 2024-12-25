@@ -8,4 +8,22 @@
   - JSON形式でReturnする
   - https://github.com/mkazutaka/software-design-202408-llmapp/blob/main/chapter2-and-5/outputparser_json.py
 
+## Sec. 4
+### set up
+- OpenAIに代わってClaudeを利用
+  - 参考
+    - https://python.langchain.com/docs/integrations/chat/bedrock/
+    - https://python.langchain.com/docs/langserve/
 
+```bash
+cd src
+AWS_PROFILE=hands-on-fuji-dev uvicorn main:app --reload
+
+```
+
+- 以下URLにアクセスして、起動サーバを確認することができる
+  - Playgroundで操作
+    - http://127.0.0.1:8000/anthropic/playground/
+    - Humanを選択して、チャットを行う
+  - APIドキュメントを確認
+    - http://127.0.0.1:8000/docs/
