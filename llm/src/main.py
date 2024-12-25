@@ -8,6 +8,7 @@ from langgraph.graph import StateGraph
 from langgraph.graph.message import add_messages
 from langserve import add_routes
 
+# 基本設定 =================
 app = FastAPI(
     title="LangChain Server",
     version="1.0"
@@ -25,6 +26,8 @@ add_routes(
     path='/anthropic'
 )
 
+# modelへのツール登録 =====
+
 
 @tool
 def weather(query: str):
@@ -37,6 +40,7 @@ tools = [weather]
 llm_model = llm_model.bind_tools(tools)
 
 
+# グラフ定義 ==============
 class State(TypedDict):
     message: Annotated[list, add_messages]
 
