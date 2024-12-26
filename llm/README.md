@@ -9,15 +9,22 @@
   - https://github.com/mkazutaka/software-design-202408-llmapp/blob/main/chapter2-and-5/outputparser_json.py
 
 ## Sec. 4
+### assumption
+- pyenv: 2.4.16
+- poetry: 1.8.4
+
 ### set up
 - OpenAIに代わってClaudeを利用
   - 参考
     - https://python.langchain.com/docs/integrations/chat/bedrock/
     - https://python.langchain.com/docs/langserve/
 
+- 使用するモデルは、事前にAWSコンソールからモデル有効化をしておくこと
+
+### start a local server
 ```bash
 cd src
-AWS_PROFILE={profile in your credential} uvicorn main:app --reload
+AWS_PROFILE={profile in your credential} uvicorn main_server:app --reload
 ```
 
 以下のように「LANGSERVE」と表示されれば成功です
@@ -43,6 +50,21 @@ INFO:     Waiting for application startup.
 - 上記ドキュメントページからinvokeのパスを確認して、Curlを実行する
 ```bash
 curl -X POST 'http://127.0.0.1:8000/anthropic/invoke' -H 'Content-Type: application/json' -d '{"input": [{"type": "human", "content": "hello"}]}'
+```
+以下のようなレスポンスが取得可能
+```json
+{"output":{"content":"Hello! How can I assist you today?","additional_kwargs":{"usage":{"prompt_tokens":8,"completion_tokens":12,"total_tokens":20},"stop_reason":"end_turn","model_id":"anthropic.claude-3-haiku-20240307-v1:0"},"response_metadata":{"usage":{"prompt_tokens":8,"completion_tokens":12,"total_tokens":20},"stop_reason":"end_turn","model_id":"anthropic.claude-3-haiku-20240307-v1:0"},"type":"ai","name":null,"id":"run-99ac0855-9ee3-49c1-ae38-93c1eaa1c511-0","example":false,"tool_calls":[],"invalid_tool_calls":[],"usage_metadata":{"input_tokens":8,"output_tokens":12,"total_tokens":20}},"metadata":{"run_id":"99ac0855-9ee3-49c1-ae38-93c1eaa1c511","feedback_tokens":[]}}%
+```
+
+### start a langgraph
+- langgraphを起動する
+```bash
+cd src
+AWS_PROFILE={profile in your credential} uvicorn main_graph:app --reload
+```
+
+```bash
+curl -X POST 'http://127.0.0.1:8000/graph/invoke' -H 'Content-Type: application/json' -d '{"input": [["user", "今日の天気を教えて"]]}'
 ```
 以下のようなレスポンスが取得可能
 ```json

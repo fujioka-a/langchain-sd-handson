@@ -21,13 +21,6 @@ llm_model = ChatBedrock(
     model_kwargs=dict(temperature=0.5)
 )
 
-add_routes(
-    app,
-    # ChatOpenAI(model="gpt-3.5-turbo"),
-    llm_model,
-    path='/anthropic'
-)
-
 # modelへのツール登録 =====
 
 
@@ -51,10 +44,34 @@ llm_graph = StateGraph(State)
 
 
 # ノードとエッジの定義 ==============
+# def call_model(state: State, config: RunnableConfig):
+#     message = state['messages']
+#     response = llm_model(message, config)
+#     return {'messages': response}
+def convert_to_anthropic_format(messages: list):
+    formatted_messages = ""
+    for message in messages:
+        if message['role'] == 'system':
+            continue  # Claude ではシステムメッセージは直接使用しない
+        elif message['role'] == 'user':
+            formatted_messages += f"\n\nHuman: {message['content']}"
+        elif message['role'] == 'assistant':
+            formatted_messages += f"\n\nAssistant: {message['content']}"
+    return {"messages": [{"content": formatted_messages + "\n\nAssistant:"}]}
+
+
 def call_model(state: State, config: RunnableConfig):
-    message = state['messages']
-    response = llm_model(message)
-    return {'message': response}
+    # 入力をAnthropic形式に変換
+    anthropic_input = convert_to_anthropic_format(state['messages'])
+
+    # モデルの呼び出し
+    response = llm_model(anthropic_input, config)
+
+    # 応答をLanggraph形式に変換
+    messages = state['messages'] + \
+        [{"role": "assistant", "content": response['completion']}]
+
+    return {'messages': messages}
 
 
 tool_node = ToolNode(tools)
@@ -77,3 +94,10 @@ llm_graph.add_conditional_edges('agent', should_continue)
 llm_graph.add_edge('tools', 'agent')
 
 compiled = llm_graph.compile()
+
+add_routes(
+    app,
+    # ChatOpenAI(model="gpt-3.5-turbo"),
+    compiled,
+    path='/anthropic'
+)
