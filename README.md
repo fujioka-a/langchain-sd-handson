@@ -7,5 +7,5 @@ https://github.com/mkazutaka/software-design-202408-llmapp/tree/main
 バックエンドとフロントエンドをモノレポ構成で管理する  
 
 それぞれの構成は対象ディレクトリ内のREADME.mdを参照すること
-- llm :　バックエンド
+- llm : バックエンド
 - my-app : フロントエンド
